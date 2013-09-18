@@ -5,7 +5,7 @@ Title: Package for stat-221.
 Author: Gabor Csardi <gcsardi@stat.harvard.edu>
 Maintainer: Gabor Csardi <gcsardi@stat.harvard.edu>
 Description: Contains (hopefully) all code for stat 221.
-Depends:
+Depends: mvtnorm
 Suggests: 
 License: Private
 URL:
