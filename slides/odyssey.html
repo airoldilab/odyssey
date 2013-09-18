@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+@import url(http://fonts.googleapis.com/css?family=Rambla:400,700,400italic,700italic);
+@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700);
+@import url(stack.css);
+@import url(style.css);
+
+.big {
+  font-size: 128px;
+}
+
+.caption {
+  font-size: 96px;
+  text-align: center;
+  text-shadow: 0px 2px 6px rgba(0,0,0,.5);
+}
+
+</style>
+<body class="overview">
+
+<section>
+  <h1 class="title">Scientific computing on the<br/>
+    Harvard <em class="title">Odyssey</em><br/> cluster</h1>
+  <h2 class="author">Gábor Csárdi</h2>
+  <h2 class="email">gcsardi@stat.harvard.edu</h2>
+</section>
+
+<section>
+<h2>Outline</h2>
+<ol class="outline">
+<li>Organizing your files
+<li>The Odyssey cluster
+<li>Running the simulations
+<li>Profiling and optimizing
+<li>Getting help
+</ol>
+</section>
+
+<!-- --------------------------------------------------- -->
+
+<section>
+<h1>I. Organizing your files</h1>
+</section>
+
+<section>
+<h2>Project: a normal model with missing data</h2>
+<p>
+\[ 
+\renewcommand{\vec}[1]{{\mathbf{#1}}}
+\newcommand{\mat}[1]{{\mathbf{#1}}}
+\begin{align}
+X_{i,j} & = L_{i,l[j]} + R_{i,j} \\
+\vec{L}_i & \sim \mathcal{N}_{2}(0,\mat\Psi) \\
+R_{i,j} & \sim \mathcal{N}(0,\theta_{j}) \\
+p(I_{i,j} = 0 |X_{i,j}=x) & = 
+   \frac{1}{1+\exp(-\eta^0_{j}-\eta^1_{j} X_{i,j})}
+\end{align}
+ \]
+</p>
+<p>
+\[ i=[1,\dots,100], j=[1,\dots,4] \]
+\[ l[1]=1, l[2]=1, l[3]=2, l[4]=2 \]
+</p>
+</section>
+
+<section>
+<h2>Directories</h2>
+<pre>
+stat221             <span class="em"># stat 221 root directory</span>
++-R221              <span class="em"># R package for all code</span>
+  +-DESCRIPTION
+  +-R               <span class="em"># R code files</span>
+    +-util.R
+    +-nnm.R
+  +-data            <span class="em"># data files (small)</span>
+    +-nnm.rda
+  +-src             <span class="em"># C/C++ source code</span>
+  +-man
+  +-inst
+    +-tests
+      +-test_nnm.R
++-data              <span class="em"># data files (bigger)</span>
++-code              <span class="em"># code for runs, submission files, etc.</span>
+  +-expr1
+</pre>
+</section>
+
+<section>
+<h2>The R code</h2>
+<pre class="code"><code class="r">
+nnmFit &lt;- function(data, steps=50) {
+  ## MCMC
+  samples &lt;- vector("list", steps)
+  samples[[1]] &lt;- state &lt;- nnmStart(data)
+  for (i in (1:steps)[-1]) {
+    state &lt;- nnmDrawL(state)
+    state &lt;- nnmDrawMissing(state)
+    [...]
+    samples[[i]] &lt;- state
+  }
+  samples
+}
+</code></pre>
+</section>
+
+<section>
+<h2>The R code, #2</h2>
+<pre class="code">
+nnmStart &lt;- function(data) {
+  ## Start state for MCMC
+  [...]
+}
+
+nnmDrawL &lt;- function(state) {
+  ## Draw L
+  [...]
+}
+
+nnmDrawMissing &lt;- function(state) {
+  ## Impute missing data
+  [...]
+}
+
+[...]
+</pre>
+</section>
+
+<section>
+<h2>Setting up a git repository on 
+  <span class="url">bitbucket.org</span></h2>
+<ul>
+<li>Helps to keep files under control.
+<li>Easier to fix bugs.
+<li>Simplifies collaboration.
+<li>Issue tracker to make a TODO list.
+<li>Reproducible research (more later).
+</ul>
+</section>
+
+<section>
+<h2>Creating an R package</h2>
+<ul>
+<li>Move and install files together. 
+<li>Load necessary functions into R with a single command.
+<li>May contain code and data (if data is small) or code only.
+</ul>
+</section>
+
+<section>
+<h2>Reproducible research</h2>
+<ul>
+<li>Essential, but often not taken seriously.
+<li>What can we do?
+<li>Keep an electronic lab-book.
+<li>Software versions (git hash for R package!).
+<li><code>sessionInfo()</code> output.
+<li>Random seed(s).
+</ul>
+</section>
+
+<section>
+<h2>Testing</h2>
+<ul>
+<li>Unit testing: not much more effort to make it more formal.
+<li><code>testthat</code> package examples.
+<li>A minimal function to run the tests.
+</ul>
+</section>
+
+<!-- --------------------------------------------------- -->
+
+<section>
+<h1>II. The Odyssey cluster</h1>
+</section>
+
+<section>
+<h2>What is Odyssey</h2>
+</section>
+
+<section>
+<h2>Requesting an account</h2>
+</section>
+
+<section>
+<h2>Authentication</h2>
+</section>
+
+<section>
+<h2>Accessing Odyssey</h2>
+</section>
+
+<section>
+<h2>Unix basics</h2>
+</section>
+
+<section>
+<h2>File systems on Odyssey</h2>
+</section>
+
+<section>
+<h2>File transfer to/from Odyssey</h2>
+</section>
+
+<section>
+<h2>Easier login and file transfer</h2>
+</section>
+
+<section>
+<h2>Module system</h2>
+</section>
+
+<section>
+<h2>Running a quick test simulation</h2>
+</section>
+
+<section>
+<h2>Debugging an error</h2>
+</section>
+
+<!-- --------------------------------------------------- -->
+
+<section>
+<h1>III. Running the simulations</h1>
+</section>
+
+<section>
+<h2>SLURM basics</h2>
+</section>
+
+<section>
+<h2>Interactive jobs</h2>
+<p><code>salloc</code> and <code>srun</code></p>
+<p>ssh to <code>slurmint</code></p>
+<p><code>srun --pty --x11=first MYPROGRAM</code></p>
+<p><code>sattach</code></p>
+<p>Exclusive access to a node</p>
+</section>
+
+<section>
+<h2>Memory requirements</h2>
+</section>
+
+<section>
+<h2>Non-interactive jobs</h2>
+<h2><code>sbatch</code></h2>
+</section>
+
+<section>
+<h2>Creating a submission file (aka <code>bsub</code> file)</h2>
+</section>
+
+<section>
+<h2>Job arrays</h2>
+</section>
+
+<section>
+<h2>Modifying the R code to work better with SLURM</h2>
+</section>
+
+<section>
+<h2>Submitting the jobs</h2>
+</section>
+
+<section>
+<h2>SLURM commands</h2>
+<p>General notes</p>
+<code>sinfo</code><br/>
+<code>squeue</code><br/>
+<code>sacct</code><br/>
+<code>sstat</code><br/>
+<code>sreport</code><br/>
+<code>scancel</code><br/>
+<code>sbcast</code><br/>
+<code>strigger</code><br/>
+<code>scontrol</code><br/>
+</section>
+
+<section>
+<h2>Dependencies between jobs</h2>
+</section>
+
+<section>
+<h2>Matlab jobs</h2>
+</section>
+
+<!-- --------------------------------------------------- -->
+
+<section>
+<h1>IV. Profiling and Optimizing</h1>
+</section>
+
+<section>
+<h2>CPU time profiling</h2>
+</section>
+
+<section>
+<h2>Memory profiling</h2>
+</section>
+
+<!-- --------------------------------------------------- -->
+
+<section>
+<h1>V. Getting help</h1>
+</section>
+
+<section>
+<h2>This tutorial @ <span class="url">bitbucket.org</span></h2>
+</section>
+
+<section>
+<h2>Harvard RC web pages</h2>
+</section>
+
+<section>
+<h2>SLURM documentation</h2>
+</section>
+
+<section>
+<h2>rchelp email</h2>
+</section>
+
+<script src="http://d3js.org/d3.v2.js?2.7.3"></script>
+<script src="stack.v0.js"></script>
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+  showProcessingMessages: false,
+});
+</script>
+</script>

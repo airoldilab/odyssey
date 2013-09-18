@@ -1,0 +1,70 @@
+
+h1, h2, h3, h4 {
+    font-family: "Yanone Kaffeesatz", sans-serif;
+    margin: 0px 0px 5px 0px;
+}
+
+body { 
+    font-family: 'Rambla', sans-serif;
+}
+
+h1 { 
+    color: #84f486;
+    font-size: 200%;
+}
+
+h2 { 
+    color: #6baef6;
+    font-size: 150%;
+}
+
+.title {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.author { 
+    text-align: center;
+    font-size: 100%;
+    margin-top: 100px;
+}
+
+.email {
+    text-align: center;
+    font-size: 100%;
+    margin-top: 50px;
+    font: monospace;
+}
+
+ol.outline {
+    margin-left: 50px;
+    list-style: upper-roman;
+    font-size: 150%;    
+}
+
+.outline li {
+    margin-top: 30px;
+}
+
+.url {
+    font: monospace;
+}
+
+.MathJax {
+    color: #ff9955;
+}
+
+span.em {
+    color: gray;
+}
+
+pre {
+    font-size: 80%;
+    font: monospace;
+}
+
+pre.code {
+    font-size: 60%;
+    font: monospace;
+}
+
