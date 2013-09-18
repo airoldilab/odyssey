@@ -67,23 +67,22 @@ p(I_{i,j} = 0 |X_{i,j}=x) & =
 
 <section>
 <h2>Directories</h2>
-<pre>
+<pre class="code">
 stat221             <span class="em"># stat 221 root directory</span>
-+-R221              <span class="em"># R package for all code</span>
-  +-DESCRIPTION
-  +-R               <span class="em"># R code files</span>
-    +-util.R
-    +-nnm.R
-  +-data            <span class="em"># data files (small)</span>
-    +-nnm.rda
-  +-src             <span class="em"># C/C++ source code</span>
-  +-man
-  +-inst
-    +-tests
-      +-test_nnm.R
-+-data              <span class="em"># data files (bigger)</span>
-+-code              <span class="em"># code for runs, submission files, etc.</span>
-  +-expr1
+├─R221              <span class="em"># R package for all code</span>
+│ ├─DESCRIPTION
+│ ├─NAMESPACE
+│ ├─R               <span class="em"># R code files</span>
+│ │ ├─util.R        <span class="em"># Common for all projects</span>
+│ │ └─nnm.R
+│ ├─data            <span class="em"># data files (small)</span>
+│ │ └─nnm.rda
+│ └─inst
+│   └─tests
+│     └─test_nnm.R
+├─data              <span class="em"># data files (bigger)</span>
+└─code              <span class="em"># code for runs, submission files, etc.</span>
+  └─insilico
 </pre>
 </section>
 
