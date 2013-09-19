@@ -89,16 +89,17 @@ stat221             <span class="em"># stat 221 root directory</span>
 
 <section>
 <h2>The R code</h2>
-<pre class="code"><code class="R">
-nnmFit &lt;- function(data, steps=50) {
+<pre class="code"><code class="R">nnmFit <- function(data, start, steps=50) {
   ## MCMC
-  samples &lt;- vector("list", steps)
-  samples[[1]] &lt;- state &lt;- nnmStart(data)
+  samples <- vector("list", steps)
+  samples[[1]] <- state <- start
   for (i in (1:steps)[-1]) {
-    state &lt;- nnmDrawL(state)
-    state &lt;- nnmDrawMissing(state)
-    [...]
-    samples[[i]] &lt;- state
+    state <- nnmDrawL(state)
+    state <- nnmDrawMissing(state)
+    state <- nnmDrawNu(state)
+    state <- nnmDrawPsi(state)
+    state <- nnmDrawTheta(state)
+    samples[[i]] <- state
   }
   samples
 }
@@ -107,23 +108,31 @@ nnmFit &lt;- function(data, steps=50) {
 
 <section>
 <h2>The R code, #2</h2>
-<pre class="code"><code class="R">
-nnmStart &lt;- function(data) {
+<pre class="code"><code class="R">nnmSim <- function(psi, theta, nu, nGenes=5000) {
+  ## Simulate artificial data
+  L <- rmvnorm(nGenes, sigma=psi)
+  R <- rmvnorm(nGenes, sigma=theta)
+  X <- X2 <- L[,c(1,1,2,2)] + R
+  for (i in 1:4) {
+    cens.prob <- 1/(1+exp(-(nu[i+4] + nu[i] * X2[,i])))
+    X2[,i][runif(length(cens.prob)) < cens.prob] <- NA
+  }
+  list(data=X, cdata=X2, obs=!is.na(X2), L=L, R=R, psi=psi, theta=theta, nu=nu)
+}
+
+nnmStart <- function(data) {
   ## Start state for MCMC
-  [...]
+  ...
+  state
 }
 
-nnmDrawL &lt;- function(state) {
-  ## Draw L
-  [...]
+nnmDrawL <- function(state) {
+  ## Conditional normal draw
+  ... update state$L here ...
+  state
 }
 
-nnmDrawMissing &lt;- function(state) {
-  ## Impute missing data
-  [...]
-}
-
-[...]
+... other conditional draws ...
 </code></pre>
 </section>
 
