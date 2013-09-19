@@ -32,7 +32,23 @@ nnmDrawMissing <- function(state) {
 
 nnmDrawNu <- function(state) {
   ## Logistic regression
-  TODO
+  lr <- function(x, y) {
+    if (all(y==1)) { return( c(0, -Inf) ) }
+    lfit <- glm(y ~ x, data=data.frame(x=x, y=y),
+                family=binomial(link="logit"))
+    lfitCoef <- as.matrix(coef(summary(lfit)))
+    c(-rnorm(1, lfitCoef[1,1], lfitCoef[1,2]),
+      -rnorm(1, lfitCoef[2,1], lfitCoef[2,2]))
+  }
+
+  for (i in 1:ncol(state$data)) {
+    x <- state$data[,i]
+    y <- state$obs[,i] + 0
+    newnu <- lr(x, y)
+    state$nu[i] <- newnu[1]
+    state$nu[i+4] <- newnu[2]
+  }
+  state
 }
 
 nnmDrawPsi <- function(state) {

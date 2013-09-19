@@ -8,6 +8,13 @@ toydata <- function(nGenes=100) {
   nnmSim(psi, theta, nu, nGenes=nGenes)
 }
 
+toydataMiss <- function(nGenes=100) {
+  psi <- cbind(c(1,.9), c(.9,1))
+  theta <- .1 * diag(4)
+  nu <- c(-2, -2, -1, 0, -2, -3, -4, -Inf)
+  nnmSim(psi, theta, nu, nGenes=nGenes)
+}
+
 test_that("nnm in silico generator works", {
   library(R221)
   set.seed(42)
@@ -45,4 +52,16 @@ test_that("nnm psi draw works", {
                      0.859851093804473, 0.959728678885832),
                    .Dim = c(2L, 2L))
   expect_that(newPsi, is_equivalent_to(res))
+})
+
+test_that("nnm nu draws work", {
+  library(R221)
+  set.seed(42)
+  data <- toydataMiss(nGenes=1000)
+
+  newNu <- nnmDrawNu(data)$nu
+  res <- c(-2.10819031907204, -2.76605673346096, -3.6214431722642, 0,
+           -1.97858084563688, -2.07328990552117, -1.24537573857442, -Inf)
+
+  expect_that(newNu, is_equivalent_to(res))
 })
