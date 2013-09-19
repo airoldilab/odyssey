@@ -8,7 +8,21 @@
 
 nnmDrawL <- function(state) {
   ## Conditional normal draw
-  TODO
+  B <- cbind(c(1,0), c(1,0), c(0,1), c(0,1))
+  V.X <- t(B) %*% state$psi %*% B + state$theta
+  C.L.X <- state$psi %*% B
+  V.LX <- rbind(cbind(state$psi, C.L.X), cbind(t(C.L.X), V.X))
+
+  for (i in 1:2) {
+    S11 <- V.LX[i, i, drop=FALSE]
+    S12 <- V.LX[i, 3:6, drop=FALSE]
+    S21 <- t(S12)
+    S22 <- V.LX[3:6, 3:6]
+    mu <- S12 %*% solve(S22) %*% t(state$data)
+    sigma <- S11 - S12 %*% solve(S22) %*% S21
+    state$L[,i] <- rnorm(length(mu), mean=mu, sd=sqrt(sigma))
+  }
+  state
 }
 
 nnmDrawMissing <- function(state) {
