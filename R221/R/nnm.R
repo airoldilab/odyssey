@@ -37,7 +37,8 @@ nnmDrawNu <- function(state) {
 
 nnmDrawPsi <- function(state) {
   ## Inverse-Wishart
-  TODO
+  state$psi <- riwish(nrow(state$L), t(state$L) %*% state$L)
+  state
 }
 
 nnmDrawTheta <- function(state) {
