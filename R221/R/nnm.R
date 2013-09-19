@@ -70,12 +70,12 @@ nnmSim <- function(psi, theta, nu, nGenes=5000) {
   ## Simulate artificial data
   L <- rmvnorm(nGenes, sigma=psi)
   R <- rmvnorm(nGenes, sigma=theta)
-  X <- L[,c(1,1,2,2)] + R
+  X <- X2 <- L[,c(1,1,2,2)] + R
 
   for (i in 1:4) {
-    cens.prob <- 1/(1+exp(-(nu[i+4] + nu[i] * X[,i])))
-    X[,i][runif(length(cens.prob)) < cens.prob] <- NA
+    cens.prob <- 1/(1+exp(-(nu[i+4] + nu[i] * X2[,i])))
+    X2[,i][runif(length(cens.prob)) < cens.prob] <- NA
   }
 
-  list(data=X, L=L, R=R, psi=psi, theta=theta, nu=nu)
+  list(data=X, obs=!is.na(X2), L=L, R=R, psi=psi, theta=theta, nu=nu)
 }
