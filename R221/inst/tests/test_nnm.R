@@ -101,3 +101,18 @@ test_that("nnm start state generator works", {
   expect_that(sort(names(start)), equals(sort(c("obs", "data", "L", "psi",
                                                 "theta", "nu"))))
 })
+
+test_that("nnm fitting works", {
+  library(R221)
+  set.seed(42)
+  data <- toydataMiss(nGenes=1000)
+  start <- nnmStart(data$cdata)
+
+  samples <- nnmFit(data$cdata, start, steps=10)
+  expect_that(length(samples), equals(10))
+  psi10 <- structure(c(0.859001713393933, 0.809602980745235,
+                       0.809602980745235, 1.02294975064775),
+                     .Dim = c(2L, 2L))
+
+  expect_that(samples[[10]]$psi, equals(psi10))
+})
