@@ -65,3 +65,15 @@ test_that("nnm nu draws work", {
 
   expect_that(newNu, is_equivalent_to(res))
 })
+
+test_that("nnm theta draws work", {
+  library(R221)
+  set.seed(42)
+  data <- toydata()
+
+  newTheta <- nnmDrawTheta(data)$theta
+  res <- structure(c(0.105223780533292, 0, 0, 0, 0, 0.0885303890153848,
+                     0, 0, 0, 0, 0.0925352784573173, 0, 0, 0, 0,
+                     0.0923744659251901), .Dim = c(4L, 4L))
+  expect_that(newTheta, is_equivalent_to(res))
+})

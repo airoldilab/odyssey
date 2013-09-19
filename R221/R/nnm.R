@@ -59,7 +59,14 @@ nnmDrawPsi <- function(state) {
 
 nnmDrawTheta <- function(state) {
   ## Linear regression
-  TODO
+  for (i in 1:ncol(state$data)) {
+    Y <- state$data[, i, drop=FALSE]
+    Y <- Y - state$L[, (i+1) %/% 2]
+    df <- nrow(state$L)
+    scale <- (t(Y) %*% Y) / nrow(state$L)
+    state$theta[i,i] <- as.numeric(df * scale / rchisq(1, df))
+  }
+  state
 }
 
 nnmFit <- function(data, start, steps=50) {
