@@ -62,5 +62,5 @@ nnmSim <- function(psi, theta, nu, nGenes=5000) {
     X[,i][runif(length(cens.prob)) < cens.prob] <- NA
   }
 
-  X
+  list(data=X, L=L, R=R, psi=psi, theta=theta, nu=nu)
 }

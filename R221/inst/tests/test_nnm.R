@@ -7,7 +7,7 @@ test_that("nnm in silico generator works", {
   psi <- cbind(c(1,.9), c(.9,1))
   theta <- .1 * diag(4)
   nu <- c(0, 0, 0, 0, -Inf, -Inf, -Inf, -Inf)
-  data <- nnmSim(psi, theta, nu, nGenes=100)
+  data <- nnmSim(psi, theta, nu, nGenes=100)$data
 
   res <- structure(c(0.984998163452428, 0.83564528905883, 0.762651890157275, 
                      0.789790398822123, 0.83564528905883, 0.914469344405947,
