@@ -64,7 +64,13 @@ pre {
 }
 
 pre.code {
+    color: #ff9955;
     font-size: 60%;
     font: monospace;
 }
 
+code {
+    color: #ff9955;
+    font-size: 80%;
+    font: monospace;
+}

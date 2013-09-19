@@ -128,8 +128,8 @@ nnmDrawMissing &lt;- function(state) {
 </section>
 
 <section>
-<h2>Setting up a git repository on 
-  <span class="url">bitbucket.org</span></h2>
+<h2>Setting up a git repository on <span class="url">
+  <a href="http://bitbucket.org">bitbucket.org</a></span></h2>
 <ul>
 <li>Helps to keep files under control.
 <li>Easier to fix bugs.
@@ -156,7 +156,11 @@ nnmDrawMissing &lt;- function(state) {
 <li>Keep an electronic lab-book.
 <li>Software versions (git hash for R package!).
 <li><code>sessionInfo()</code> output.
-<li>Random seed(s).
+<li>Random seed(s). Initialize based on current microseconds:
+<pre class="code"><code class="R">fracSec <- function() {
+  as.numeric(format(Sys.time(), "%OS")) * 10^5
+}
+</code></pre>
 </ul>
 </section>
 
@@ -164,8 +168,19 @@ nnmDrawMissing &lt;- function(state) {
 <h2>Testing</h2>
 <ul>
 <li>Unit testing: not much more effort to make it more formal.
-<li><code>testthat</code> package examples.
-<li>A minimal function to run the tests.
+<li><code>testthat</code> package example.
+<pre class="code"><code class="R">test_that("nnm start state generator works", {
+  library(R221)
+  set.seed(42)
+  psi <- cbind(c(1,.9), c(.9,1))
+  theta <- .1 * diag(4)
+  nu <- c(0, 0, 0, 0, -Inf, -Inf, -Inf, -Inf)
+  data <- nnmSim(psi, theta, nu)
+  start <- nnmStart(data)
+  expect_that(sort(names(start)), equals(sort(c("data", "L", "nu",
+                                                "obs", "psi", "theta"))))
+})
+</code></pre>
 </ul>
 </section>
 
@@ -176,39 +191,95 @@ nnmDrawMissing &lt;- function(state) {
 </section>
 
 <section>
-<h2>What is Odyssey</h2>
-</section>
-
-<section>
-<h2>Requesting an account</h2>
-</section>
-
-<section>
-<h2>Authentication</h2>
+<h2>What is <a href="https://rc.fas.harvard.edu/">Odyssey?</a></h2>
+<p><ul>
+<li>Linux cluster for scientific computing.
+<li>Make sure that you read the
+  <a href="https://rc.fas.harvard.edu/odyssey-quickstart-guide/">
+    quick start guide</a>.
+<li><a href="https://account.rc.fas.harvard.edu/request/">
+  Requesting</a> an account
+<li>Authentication: two-stage OpenAuth.
 </section>
 
 <section>
 <h2>Accessing Odyssey</h2>
-</section>
-
-<section>
-<h2>Unix basics</h2>
+<ul>
+<li>From OSX and Linux: via the <code>ssh</code> program.
+<li>From Windows: <code>putty</code> (free) or <code>SecureCRT</code>
+  (commertial).
+<li>Unix basics: see <a href="https://software.rc.fas.harvard.edu/training/intro_unix/latest">tutorial from RC.
+</ul>
 </section>
 
 <section>
 <h2>File systems on Odyssey</h2>
+<p>Home directory: 40GB quota, backed up nightly.</p>
+<p><code>/n/holyscratch</code>: 273TB storage, no quota. 90 days
+  retention policy. Contact rchelp to get space here.</p>
+<p><code>/scratch</code>: local storage for each node.</p>
 </section>
 
 <section>
 <h2>File transfer to/from Odyssey</h2>
+<p>From OSX and Linux: <code>scp</code>. E.g. to odyssey:
+<pre class="code">
+scp R221_0.1.tar.gz odyssey.fas.harvard.edu:
+scp mydata.RData \
+    odyssey.fas.harvard.edu:/n/holyscratch/myuser/data/
+</pre>
+<p>
+From odyssey:
+<pre class="code">
+scp odyssey.fas.harvard.edu:results.RData .
+</pre>
+</p>
 </section>
 
 <section>
 <h2>Easier login and file transfer</h2>
+<p>
+On OSX and Linux. Put this into your <code>~/.ssh/config</code> file
+on your laptop/desktop (not on odyssey!):
+<pre class="code">
+Host odyssey.fas.harvard.edu odyssey ody
+     Hostname odyssey.fas.harvard.edu
+     User csardi
+     ControlMaster auto
+     ControlPath /tmp/%r@%h:%p
+</pre>
+</p>
+<p>
+After this, you only need to authenticate yourself at
+your first login. Until you close this first session,
+other sessions don't need your password and verification key.
+</p>
+<p>
+Plus, you don't need to type out the full odyssey hostname,
+but you can use <code>ody</code> instead!
+</p>
 </section>
 
 <section>
 <h2>Module system</h2>
+<p>
+<ul>
+<li>Support for various software packages is modular on odyssey.
+<li>If you want to use a piece of software, you need to load
+  its module:
+  <pre class="code">
+    [csardi@rclogin07 ~]$ module load math/R-3.0.1
+    Loading module hpc/intel-mkl-11.0.0.079.
+    Loading module hpc/gcc-4.7.2.
+    Loading module hpc/java-1.7.0_13.
+    Loading module math/R-3.0.1.  </pre>
+<li>Dependencies are handled automatically.
+<li>Type in <code>module</code> without arguments to list the
+available options.
+<li>If you always want to load a module automatically, whenever you
+log in, put the command into your <code>~/.bashrc</code> file.
+</ul>
+</p>
 </section>
 
 <section>
