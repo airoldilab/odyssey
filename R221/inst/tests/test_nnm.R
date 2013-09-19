@@ -93,3 +93,11 @@ test_that("nnm imputation works", {
   expect_that(mean(newData[!data$obs]), equals(-1.15280702638899))
 })
 
+test_that("nnm start state generator works", {
+  library(R221)
+  set.seed(42)
+  data <- toydataMiss(nGenes=1000)
+  start <- nnmStart(data$cdata)
+  expect_that(sort(names(start)), equals(sort(c("obs", "data", "L", "psi",
+                                                "theta", "nu"))))
+})

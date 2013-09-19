@@ -136,7 +136,24 @@ nnmFit <- function(data, start, steps=50) {
 
 nnmStart <- function(data) {
   ## Start state for MCMC
-  TODO
+  state <- list()
+
+  state$obs  <- !is.na(data)
+  state$data <- data
+  state$data[is.na(state$data)] <- 0
+
+  state$L <- cbind(rowMeans(state$data[,1:2]),
+                   rowMeans(state$data[,3:4]))
+  state$psi <- cov(state$L)
+  state$theta <- 0.1 * diag(4)
+
+  if (any(is.na(data))) {
+    state$nu <- nnmDrawNu(state)$nu
+  } else {
+    state$nu <- c(0, 0, 0, 0, -Inf, -Inf, -Inf, -Inf)
+  }
+
+  state
 }
 
 nnmSim <- function(psi, theta, nu, nGenes=5000) {
