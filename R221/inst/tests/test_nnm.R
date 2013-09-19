@@ -116,3 +116,25 @@ test_that("nnm fitting works", {
 
   expect_that(samples[[10]]$psi, equals(psi10))
 })
+
+test_that("nnm runs work", {
+  library(R221)
+  set.seed(42)
+  data <- toydataMiss(nGenes=1000)
+  start <- nnmStart(data$cdata)
+
+  outdir <- tempfile()
+  dir.create(outdir)
+
+  nnmRun(data$cdata, start, noSamples=5, thin=5, outputdir=outdir)
+
+  outfiles <- sprintf("%s/sample-%i.Rdata", outdir, 1:5)
+  expect_that(all(file.exists(outfiles)), is_true())
+
+  load(outfiles[5])
+  psi5 <- structure(c(0.938999620733965, 0.838309586730734,
+                      0.838309586730734, 0.960757019891175),
+                    .Dim = c(2L, 2L))
+
+  expect_that(sample$psi, equals(psi5))
+})

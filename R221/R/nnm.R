@@ -170,3 +170,15 @@ nnmSim <- function(psi, theta, nu, nGenes=5000) {
   list(data=X, cdata=X2,
        obs=!is.na(X2), L=L, R=R, psi=psi, theta=theta, nu=nu)
 }
+
+nnmRun <- function(data, start, noSamples, thin=50, outputdir) {
+  ## Run a simuation, save samples to files
+  start <- nnmStart(data)
+
+  for (i in 1:noSamples) {
+    samples <- nnmFit(data, start, steps=thin)
+    start <- sample <- samples[[thin]]
+    save(sample, file=sprintf("%s/sample-%i.Rdata", outputdir, i))
+  }
+  invisible(TRUE)
+}
