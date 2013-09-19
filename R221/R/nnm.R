@@ -25,9 +25,59 @@ nnmDrawL <- function(state) {
   state
 }
 
+invlogit <- function(x, nu0, nu1) {
+  1/(1+exp(-(nu0+nu1*x)))
+}
+
+targetDens <- function(x, nu0, nu1, mu, sig2) {
+  invlogit(x, nu0, nu1) * dnorm(x, mu, sqrt(sig2))
+}
+
+targetHessian <- function(x, nu0, nu1, sig2) {
+  -nu1^2/(exp(nu0+nu1*x)+1) + nu1^2/(1+exp(nu0+nu1*x))^2 - 1/sig2
+}
+
 nnmDrawMissing <- function(state) {
-  ## Imputation, MH step, TODO
-  TODO
+  ## Imputation, MH step
+  B <- cbind(c(1,0), c(1,0), c(0,1), c(0,1))
+  V.X <- t(B) %*% state$psi %*% B + state$theta
+  C.L.X <- state$psi %*% B
+  V.LX <- rbind(cbind(state$psi, C.L.X), cbind(t(C.L.X), V.X))
+
+  missIdx <- which(!state$obs, arr.ind=TRUE)
+  for (i in seq_len(nrow(missIdx))) {
+    mr <- missIdx[i, 1]
+    mc <- missIdx[i, 2]
+    nu0 <- state$nu[mc+4]
+    nu1 <- state$nu[mc]
+
+    S11 <- V.LX[mc+2, mc+2, drop=FALSE]
+    S12 <- V.LX[mc+2, -(mc+2), drop=FALSE]
+    S21 <- t(S12)
+    S22 <- V.LX[-(mc+2), -(mc+2), drop=FALSE]
+
+    muCond <- S12 %*% solve(S22) %*% c(state$L[mr,], state$data[mr,-mc])
+    sig2Cond <- S11 - S12 %*% solve(S22) %*% S21
+
+    sdMu <- sqrt(-1 / targetHessian(muCond, nu0, nu1, sig2Cond))
+
+    xMax <- optimize(f=function(x) -targetDens(x, nu0, nu1, muCond,
+                       sig2Cond),
+                     interval=c(muCond-sdMu*3, muCond+sdMu*3))$minimum
+    V <- -1 / targetHessian(xMax, nu0, nu1, sig2Cond)
+
+    proposal <- rnorm(1, mean=xMax, sd=sqrt(V))
+
+    r1 <- targetDens(proposal, nu0, nu1, muCond, sig2Cond) /
+      targetDens(state$data[mr, mc], nu0, nu1, muCond, sig2Cond)
+    r2 <- dnorm(state$data[mr, mc], mean=xMax, sd=sqrt(V)) /
+      dnorm(proposal, mean=xMax, sd=sqrt(V))
+    r <- r1 * r2
+    if (r>=1 || runif(1) < r) {
+      state$data[mr, mc] <- proposal
+    }
+  }
+  state
 }
 
 nnmDrawNu <- function(state) {

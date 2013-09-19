@@ -77,3 +77,19 @@ test_that("nnm theta draws work", {
                      0.0923744659251901), .Dim = c(4L, 4L))
   expect_that(newTheta, is_equivalent_to(res))
 })
+
+test_that("nnm imputation works", {
+  library(R221)
+  set.seed(42)
+  data <- toydataMiss(nGenes=1000)
+
+  newData <- nnmDrawMissing(data)$data
+  missing <- apply(which(!data$obs, arr.ind=TRUE), 1, paste, collapse="-")
+  updated <- apply(which(newData != data$data, arr.ind=TRUE), 1, paste,
+                   collapse="-")
+
+  expect_that(all(updated %in% missing), is_true())
+  expect_that(length(updated), equals(391))
+  expect_that(mean(newData[!data$obs]), equals(-1.15280702638899))
+})
+
