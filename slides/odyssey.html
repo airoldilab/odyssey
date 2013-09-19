@@ -293,10 +293,41 @@ log in, put the command into your <code>~/.bashrc</code> file.
 
 <section>
 <h2>Running a quick test simulation</h2>
+<pre class="code"><code class="R"><span class="prompt">[csardi@rclogin03 ~]$</span> <span class="input">ssh slurmint</span>
+Last login: Wed Sep 18 04:56:42 2013 from rclogin12.rc.fas.harvard.edu
+<span class="prompt">[csardi@heroint5 ~]$</span> <span class="input">srun -n 1 -p general --pty R</span>
+srun: job 826728 queued and waiting for resources
+srun: job 826728 has been allocated resources
+
+R version 3.0.1 (2013-05-16) -- "Good Sport"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+[...]
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> <span class="input">library(R221)</span>
+Loading required package: mvtnorm
+> <span class="input">runTests()</span>
+Loading required package: testthat
+nnm : <span style="color:green">.............</span>
+</code></pre>
+Seems to work.
 </section>
 
 <section>
-<h2>Debugging an error</h2>
+<h2>Debugging in R, some tips</h2>
+<p><ul>
+<li>Use the <code>traceback()</code> function immediately
+    after an error.
+<li>Use the <code>debug()</code> function to step through an R
+    function line by line.
+<li>Use <code>options(error=recover)</code> to enter an interactive
+    debugging tool, immediately after an error happens.
+</ul></p>
 </section>
 
 <!-- --------------------------------------------------- -->

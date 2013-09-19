@@ -74,3 +74,15 @@ code {
     font-size: 80%;
     font: monospace;
 }
+
+.prompt {
+    color: red;
+}
+
+.input {
+    color: red;
+}
+
+.output {
+    color: fuchsia;
+}
