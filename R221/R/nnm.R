@@ -100,5 +100,6 @@ nnmSim <- function(psi, theta, nu, nGenes=5000) {
     X2[,i][runif(length(cens.prob)) < cens.prob] <- NA
   }
 
-  list(data=X, obs=!is.na(X2), L=L, R=R, psi=psi, theta=theta, nu=nu)
+  list(data=X, cdata=X2,
+       obs=!is.na(X2), L=L, R=R, psi=psi, theta=theta, nu=nu)
 }
