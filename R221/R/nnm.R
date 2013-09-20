@@ -180,3 +180,37 @@ nnmRun <- function(data, start, noSamples, thin=50, outputdir) {
   }
   invisible(TRUE)
 }
+
+##############################################################
+# JOBS
+##############################################################
+
+nnmRunInsilico <- function(ID) {
+  ## Get my ID
+  if (missing(ID)) {
+    args <- commandArgs(TRUE)
+    ID <- as.numeric(args[1])
+  }
+  outdir <- sprintf("out-%i", ID)
+  dir.create(outdir)
+
+  pars <- seq(.1, .9, by=.1)
+  psi12 <- pars[ID]
+
+  ## Random seed
+  seed <- fracSec()
+  set.seed(seed)
+
+  ## Session information
+  session <- sessionInfo()
+
+  ## In-silico data
+  psi <- cbind(c(1, psi12), c(psi12, 1))
+  theta <- .1 * diag(4)
+  nu <- c(0, 0, 0, 0, -Inf, -Inf, -Inf, -Inf)
+  truth <- nnmSim(psi, theta, nu, nGenes=1000)
+  start <- nnmStart(truth$cdata)
+
+  save(truth, start, seed, session, file=sprintf("%s/simdata.Rdata", outdir))
+  nnmRun(data$cdata, start, noSamples=100, thin=50, outputdir=outdir)
+}
