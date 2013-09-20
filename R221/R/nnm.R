@@ -173,8 +173,6 @@ nnmSim <- function(psi, theta, nu, nGenes=5000) {
 
 nnmRun <- function(data, start, noSamples, thin=50, outputdir) {
   ## Run a simuation, save samples to files
-  start <- nnmStart(data)
-
   for (i in 1:noSamples) {
     samples <- nnmFit(data, start, steps=thin)
     start <- sample <- samples[[thin]]
