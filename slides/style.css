@@ -55,7 +55,7 @@ ol.outline {
 }
 
 span.em {
-    color: gray;
+    color: yellow;
 }
 
 pre {
@@ -75,6 +75,12 @@ code {
     font: monospace;
 }
 
+.filelist {
+    font: monospace;
+    font-size: 80%;
+    line-height: 100%;
+}
+
 .prompt {
     color: red;
 }
@@ -86,3 +92,4 @@ code {
 .output {
     color: fuchsia;
 }
+
